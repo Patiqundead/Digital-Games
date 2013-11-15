@@ -19,7 +19,6 @@ package
 			kill();
 		}
 		public function boom(theX:int, theY:int):void {
-			//reset(theX - width / 2, theY -height / 2);
 			reset(theX, theY);
 			play("boom", true);
 			FlxG.flash();

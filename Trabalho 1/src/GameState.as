@@ -7,6 +7,9 @@ package
 	 */
 	public class GameState extends FlxState
 	{
+		[Embed(source = "../assets/sounds/SDM_FightingBack.mp3")] private var fightingBackMP3: Class;
+		[Embed(source = "../assets/sounds/medieval.mp3")] private var medievalMP3: Class;
+		[Embed(source="../assets/sounds/FX-Impact193.mp3")] private var explosionMP3: Class;
 		private var player1: Ship;
 		private var back1: Background;
 		private var asteroidsG: FlxGroup;
@@ -22,18 +25,30 @@ package
 		private var auxAstVivos:int;
 		public var textVidas: FlxText;
 		private var explosion: Explosion;
+		public var textLevel: FlxText;
+		public var textAstVivos: FlxText;
+		public var textMaxLevel: FlxText;
 		
 		private static const NUM_PLAYER_BULLETS: int = 30;
 		
-		override public function create():void 
-		{
-			//FlxG.level = 1;
-			auxAstVivos = 1;
+		override public function create():void {
 			super.create();
+			
+			if (FlxG.level <= 3) {
+				FlxG.playMusic(medievalMP3, 1);
+				back1 = new Background(1);
+			}else if(FlxG.level >= 4 && FlxG.level <= 8){
+				FlxG.playMusic(medievalMP3, 1);
+				back1 = new Background(3);
+			}else if(FlxG.level >= 9){
+				FlxG.playMusic(fightingBackMP3, 1);
+				back1 = new Background(3);
+			}
+			
+			auxAstVivos = 1;
 			var bullet: Bullet;
 			var ast: Asteroid;
 			player1 = new Ship(FlxG.width / 2, FlxG.height / 2);
-			back1 = new Background(1);
 			explosion = new Explosion(0,0);
 			player1.health = 3;
 			var i:int;
@@ -49,21 +64,24 @@ package
 				ast = new Asteroid(1, a, b);
 				asteroidsG.add(ast);
 				ast.reset(a, b);
-
 				a = FlxG.random() * 100;
 				a = a % 2;
 				b = FlxG.random() * 100;
 				b = b % 2;
 				
 				if (a == 1) {
-					ast.velocity.x += FlxG.random() * 100;
+					ast.velocity.x += ((FlxG.random() * 110)+2);
 				}else {
-					ast.velocity.x -= FlxG.random() * 100;
+					a = FlxG.random() * 110;
+					if (a == 0) a -= 2;
+					ast.velocity.x -= a;
 				}
 				if (b == 1) {
-					ast.velocity.y += FlxG.random() * 100;
+					ast.velocity.y += ((FlxG.random() * 110)+2);
 				}else {
-					ast.velocity.y -= FlxG.random() * 100;
+					b = FlxG.random() * 110;
+					if (b == 0) b -= 2;
+					ast.velocity.y -= b;
 				}
 			}
 			
@@ -107,7 +125,10 @@ package
 			vsPlayerBullets.add(asteroidsM);
 			vsPlayerBullets.add(asteroidsP);
 			
-			textVidas = new FlxText(10, 10, 400, "Vidas", true);
+			textVidas = new FlxText(10, 10, 400, "Lives", true);
+			textLevel = new FlxText(10, 30, 400, "Level = " + FlxG.level, true);
+			textAstVivos = new FlxText(10, 50, 400, "Asteroids alive = ", true);
+			textMaxLevel = new FlxText(10, 70, 400, "Maximum level reached = ", true);
 			
 			add(back1);
 			add(explosion);
@@ -117,6 +138,9 @@ package
 			add(asteroidsP);
 			add(player1);
 			add(textVidas);
+			add(textLevel);
+			add(textAstVivos);
+			add(textMaxLevel);
 			
 			FlxG.log("Adicionou player");
 		}
@@ -126,42 +150,54 @@ package
 			var a: int;
 			var b: int;
 			var ast: Asteroid;
-			textVidas.text = "Vidas = " + player1.health;
+			textVidas.text = "Lifes = " + player1.health;
+			textAstVivos.text = "Asteroids alive = " + asteroidsVivos;
+			textMaxLevel.text = "Maximum level reached = " + FlxG.scores[0];
 			
 			if (player1.health <= 0) {
 				player1.health = 0;
+				FlxG.music.fadeOut(2, true);
 				FlxG.fade(0xff000000, 2, newMenuState);
 			}
 			
 			if (FlxG.overlap(playerBullets, vsPlayerBullets, playerHitVsPlayer)) {
 				asteroidsVivos--;
+				FlxG.play(explosionMP3, 1, false, true);
 			}
 			if (FlxG.overlap(asteroidsG, vsAsteroidsG, asteroidHitVsAsteroid)) {
 				player1.reset(FlxG.width / 2, FlxG.height / 2);
 				player1.health--;
 				player1.flicker(1);
 				asteroidsVivos--;
+				FlxG.play(explosionMP3, 1, false, true);
 			}
 			if (FlxG.overlap(asteroidsM, vsAsteroidsM, asteroidHitVsAsteroid)) {
 				player1.reset(FlxG.width / 2, FlxG.height / 2);
 				player1.health--;
 				player1.flicker(1);
 				asteroidsVivos--;
+				FlxG.play(explosionMP3, 1, false, true);
 			}
 			if (FlxG.overlap(asteroidsP, vsAsteroidsP, asteroidHitVsAsteroid)) {
 				player1.reset(FlxG.width / 2, FlxG.height / 2);
 				player1.health--;
 				player1.flicker(1);
 				asteroidsVivos--;
+				FlxG.play(explosionMP3, 1, false, true);
 			}
 			if (player1.health <= 0) {
 				player1.health = 0;
+				FlxG.music.fadeOut(2, true);
 				FlxG.fade(0xff000000, 2, newMenuState);
 			}
+			
 			if (asteroidsVivos == 0 && auxAstVivos == 1) {
 				FlxG.level += 1;
+				FlxG.score = FlxG.level;
+				FlxG.scores[0] = FlxG.score;
 				auxAstVivos = 0;
 				FlxG.log("Level =" + FlxG.level);
+				FlxG.music.fadeOut(1, true);
 				FlxG.fade(0xff000000, 1, newGameLevel);
 			}
 			super.update();
@@ -200,14 +236,18 @@ package
 							v = v % 2;
 							
 							if (u == 1) {
-								f.velocity.x += FlxG.random() * 100;
+								f.velocity.x += ((FlxG.random() * 110)+2);
 							}else {
-								f.velocity.x -= FlxG.random() * 100;
+								u = FlxG.random() * 110;
+								if (u == 0) u -= 2;
+								f.velocity.x -= u;
 							}
 							if (v == 1) {
-								f.velocity.y += FlxG.random() * 100;
+								f.velocity.y += ((FlxG.random() * 110)+2);
 							}else {
-								f.velocity.y -= FlxG.random() * 100;
+								v = FlxG.random() * 110;
+								if (v == 0) v -= 2;
+								f.velocity.y -= v;
 							}
 						}
 					}
@@ -228,14 +268,18 @@ package
 							v = v % 2;
 							
 							if (u == 1) {
-								p.velocity.x += FlxG.random() * 100;
+								p.velocity.x += ((FlxG.random() * 110)+2);
 							}else {
-								p.velocity.x -= FlxG.random() * 100;
+								u = FlxG.random() * 110;
+								if (u == 0) u -= 2;
+								p.velocity.x -= u;
 							}
 							if (v == 1) {
-								p.velocity.y += FlxG.random() * 100;
+								p.velocity.y += ((FlxG.random() * 110)+2);
 							}else {
-								p.velocity.y -= FlxG.random() * 100;
+								v = FlxG.random() * 110;
+								if (v == 0) v -= 2;
+								p.velocity.y -= v;
 							}
 						}
 					}
@@ -270,14 +314,18 @@ package
 							v = v % 2;
 							
 							if (u == 1) {
-								f.velocity.x += FlxG.random() * 100;
+								f.velocity.x += ((FlxG.random() * 110)+2);
 							}else {
-								f.velocity.x -= FlxG.random() * 100;
+								u = FlxG.random() * 110;
+								if (u == 0) u -= 2;
+								f.velocity.x -= u;
 							}
 							if (v == 1) {
-								f.velocity.y += FlxG.random() * 100;
+								f.velocity.y += ((FlxG.random() * 110)+2);
 							}else {
-								f.velocity.y -= FlxG.random() * 100;
+								v = FlxG.random() * 110;
+								if (v == 0) v -= 2;
+								f.velocity.y -= v;
 							}
 						}
 					}
@@ -298,14 +346,18 @@ package
 							v = v % 2;
 							
 							if (u == 1) {
-								p.velocity.x += FlxG.random() * 100;
+								p.velocity.x += ((FlxG.random() * 110)+2);
 							}else {
-								p.velocity.x -= FlxG.random() * 100;
+								u = FlxG.random() * 110;
+								if (u == 0) u -= 2;
+								p.velocity.x -= u;
 							}
 							if (v == 1) {
-								p.velocity.y += FlxG.random() * 100;
+								p.velocity.y += ((FlxG.random() * 110)+2);
 							}else {
-								p.velocity.y -= FlxG.random() * 100;
+								v = FlxG.random() * 110;
+								if (v == 0) v -= 2;
+								p.velocity.y -= v;
 							}
 						}
 					}
@@ -315,5 +367,4 @@ package
 			e2.kill();
 		}
 	}
-
 }

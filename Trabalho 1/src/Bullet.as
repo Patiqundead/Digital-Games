@@ -19,28 +19,24 @@ package
 			kill();
 		}
 		override public function update():void {
-			if (!onScreen()) {
-				kill();
-			}
 			counter += FlxG.elapsed;
 			if (counter >= 2) {
 				this.kill();
 				counter = 0;
 			}
-			if (this.x <= 0) {
+			if (this.x > FlxG.width) {
+				this.x = 1;
+			}
+			if (this.x + width < 0) {
 				this.x = FlxG.width;
 			}
-			if (this.x > FlxG.width) {
-				this.x = 0;
-			}
-			if (this.y <= 0) {
-				this.y = FlxG.height;
-			}
 			if (this.y > FlxG.height) {
-				this.y = 0;
+				this.y = 1;
+			}
+			if (this.y + height < 0) {
+				this.y = FlxG.height;
 			}
 			super.update();
 		}
-		
 	}
 }

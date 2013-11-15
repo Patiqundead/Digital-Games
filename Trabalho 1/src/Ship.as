@@ -8,7 +8,8 @@ package
 	 */
 	public class Ship extends FlxSprite
 	{
-		[Embed(source = "../assets/images/ship1 32x44.png")] private var shipPNG:Class;
+		[Embed(source = "../assets/images/ship1 32x44.png")] private var shipPNG: Class;
+		[Embed(source = "../assets/sounds/FX-Lazer285.mp3")] private var laserMP3: Class;
 		private var T_X: int = 32;
 		private var T_Y: int = 44;
 		private var alvo :FlxSprite;
@@ -21,7 +22,6 @@ package
 			
 			maxAngular = 120;
 			angularDrag = 400;
-			//drag.x = 5;
 			
 			velocity.x = 0;
 			velocity.y = 0;
@@ -33,7 +33,8 @@ package
 			if (FlxG.keys.justPressed("SPACE")) {
 				var bullet: Bullet = (FlxG.state as GameState).playerBullets.getFirstAvailable() as Bullet;
  				bullet.reset(this.x + this.width / 2 - bullet.width / 2, this.y + this.height / 2 - bullet.height / 2);
-				//FlxG.log("angulo " + this.angle);
+				
+				FlxG.play(laserMP3, 0.6, false, true);
 				
 				bullet.velocity.x = 170 * Math.sin(this.angle * 3.14 / 180);
 				bullet.velocity.y = 170 * -Math.cos(this.angle * 3.14 / 180);
@@ -58,7 +59,6 @@ package
 			
 			if (FlxG.keys.pressed("UP")) {
 				play("frente");
-				//_thrust = FlxU.computeVelocity(_thrust, FlxG.keys.pressed("UP") ? 90 : 0, drag.x, 60);
 				FlxU.rotatePoint(0, 100, 0, 0, angle, acceleration);
 			}
 			if (FlxG.keys.pressed("LEFT")) {
@@ -71,7 +71,6 @@ package
 				this.angle+=2;
 			}
 			
-			//play("idle");
 			super.update();
 		}
 	}

@@ -40,45 +40,45 @@ package
 		}
 		override public function update(): void {
 			if (tipo == 1) {
-				if (this.x + T_X_G <= 0) {
+				if (this.x > FlxG.width) {
+					this.x = 1;
+				}
+				if (this.x + T_X_G < 0) {
 					this.x = FlxG.width;
 				}
-				if (this.x > FlxG.width) {
-					this.x = 0 - T_X_G;
-				}
-				if (this.y + T_Y_G <= 0) {
-					this.y = FlxG.height;
-				}
 				if (this.y > FlxG.height) {
-					this.y = 0 - T_Y_G;
+					this.y = 1;
+				}
+				if (this.y + T_Y_G < 0) {
+					this.y = FlxG.height;
 				}
 			}
 			if (tipo == 2) {
-				if (this.x + T_X_M <= 0) {
+				if (this.x > FlxG.width) {
+					this.x = 1;
+				}
+				if (this.x + T_X_M < 0) {
 					this.x = FlxG.width;
 				}
-				if (this.x > FlxG.width) {
-					this.x = 0 - T_X_M;
-				}
-				if (this.y + T_Y_M <= 0) {
-					this.y = FlxG.height;
-				}
 				if (this.y > FlxG.height) {
-					this.y = 0 - T_Y_M;
+					this.y = 1;
+				}
+				if (this.y + T_Y_M < 0) {
+					this.y = FlxG.height;
 				}
 			}
 			if (tipo == 3) {
-				if (this.x + T_X_P <= 0) {
+				if (this.x > FlxG.width) {
+					this.x = 1;
+				}
+				if (this.x + T_X_P < 0) {
 					this.x = FlxG.width;
 				}
-				if (this.x > FlxG.width) {
-					this.x = 0 - T_X_P;
-				}
-				if (this.y + T_Y_P <= 0) {
-					this.y = FlxG.height;
-				}
 				if (this.y > FlxG.height) {
-					this.y = 0 - T_Y_P;
+					this.y = 1;
+				}
+				if (this.y + T_Y_P < 0) {
+					this.y = FlxG.height;
 				}
 			}
 			super.update();
