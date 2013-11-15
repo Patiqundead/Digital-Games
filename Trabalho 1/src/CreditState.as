@@ -18,7 +18,7 @@ package
 			FlxG.mouse.show();
 			background	= new Background(2);
 			
-			credits = new FlxText(50, FlxG.height, FlxG.width - 200, "Asteroids\nVersion 1.00\n\n\nDeveloped by: Patrick de Bastiani\nFederal University of Fronteira Sul\nComputer Science\n\n\nGoal:\nCreate a game based on the shooting theme\n\n\nAssets:\nhttp://opengameart.org/\n\n\nSounds:\nhttp://opengameart.org/\nhttp://www.soundfx-free.com/\n");
+			credits = new FlxText(50, FlxG.height, FlxG.width - 200, "Asteroids\nVersion 1.1\n\n\nDeveloped by: Patrick de Bastiani\nFederal University of Fronteira Sul\nComputer Science\n\n\nGoal:\nCreate a game based on the shooting theme\n\n\nAssets:\nhttp://opengameart.org/\n\n\nSounds:\nhttp://opengameart.org/\nhttp://www.soundfx-free.com/\n");
 			credits.alignment = "center";
 			credits.color = 0x000000;
 			credits.size = 14;

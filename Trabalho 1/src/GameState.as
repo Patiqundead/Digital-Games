@@ -194,7 +194,9 @@ package
 			if (asteroidsVivos == 0 && auxAstVivos == 1) {
 				FlxG.level += 1;
 				FlxG.score = FlxG.level;
-				FlxG.scores[0] = FlxG.score;
+				if(FlxG.scores[0] < FlxG.score){
+					FlxG.scores[0] = FlxG.score;
+				}
 				auxAstVivos = 0;
 				FlxG.log("Level =" + FlxG.level);
 				FlxG.music.fadeOut(1, true);
