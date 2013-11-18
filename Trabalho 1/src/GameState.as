@@ -34,8 +34,6 @@ package
 		override public function create():void {
 			super.create();
 			
-			FlxG.level = 20;
-			
 			if (FlxG.level <= 5) {
 				FlxG.playMusic(fightingBackMP3, 1);
 				back1 = new Background(1);
