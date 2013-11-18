@@ -8,7 +8,6 @@ package
 	public class GameState extends FlxState
 	{
 		[Embed(source = "../assets/sounds/SDM_FightingBack.mp3")] private var fightingBackMP3: Class;
-		[Embed(source = "../assets/sounds/medieval.mp3")] private var medievalMP3: Class;
 		[Embed(source="../assets/sounds/FX-Impact193.mp3")] private var explosionMP3: Class;
 		private var player1: Ship;
 		private var back1: Background;
@@ -35,10 +34,10 @@ package
 			super.create();
 			
 			if (FlxG.level <= 3) {
-				FlxG.playMusic(medievalMP3, 1);
+				FlxG.playMusic(fightingBackMP3, 1);
 				back1 = new Background(1);
 			}else if(FlxG.level >= 4 && FlxG.level <= 8){
-				FlxG.playMusic(medievalMP3, 1);
+				FlxG.playMusic(fightingBackMP3, 1);
 				back1 = new Background(3);
 			}else if(FlxG.level >= 9){
 				FlxG.playMusic(fightingBackMP3, 1);

@@ -7,6 +7,7 @@ package
 	 */
 	public class CreditState extends FlxState
 	{
+		[Embed(source = "../assets/sounds/Iwan Gabovitch - Dark Ambience Loop.mp3")] private var darkAmbienceMP3: Class;
 		private var background: Background;
 		private var credits	:FlxText;
 		private var btnBack :FlxButton;
@@ -23,6 +24,7 @@ package
 			credits.color = 0x000000;
 			credits.size = 14;
 			credits.velocity.y = -18;
+			FlxG.playMusic(darkAmbienceMP3, 1);
 			
 			btnBack = new FlxButton(FlxG.width - 200, FlxG.height * 0.90, "Voltar", goBack);
 			
