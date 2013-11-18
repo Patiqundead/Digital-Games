@@ -30,7 +30,7 @@ package
 			title.size = 100;
 			title.color = 0xff00b2ee;
 			
-			subLine = new FlxText(FlxG.width - 80, FlxG.height - 20, FlxG.width, "Version 1.1", true);
+			subLine = new FlxText(FlxG.width - 80, FlxG.height - 20, FlxG.width, "Version 1.2", true);
 			subLine.size = 10;
 			subLine.color = 0xff000000;
 			subLine.alignment = "left";

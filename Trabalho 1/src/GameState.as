@@ -27,22 +27,23 @@ package
 		public var textLevel: FlxText;
 		public var textAstVivos: FlxText;
 		public var textMaxLevel: FlxText;
+		private var countTemp: int;
 		
 		private static const NUM_PLAYER_BULLETS: int = 30;
 		
 		override public function create():void {
 			super.create();
 			
-			if (FlxG.level <= 3) {
+			FlxG.level = 20;
+			
+			if (FlxG.level <= 5) {
 				FlxG.playMusic(fightingBackMP3, 1);
 				back1 = new Background(1);
-			}else if(FlxG.level >= 4 && FlxG.level <= 8){
-				FlxG.playMusic(fightingBackMP3, 1);
-				back1 = new Background(3);
-			}else if(FlxG.level >= 9){
+			}else if(FlxG.level >= 6){
 				FlxG.playMusic(fightingBackMP3, 1);
 				back1 = new Background(3);
 			}
+			countTemp = 0;
 			
 			auxAstVivos = 1;
 			var bullet: Bullet;
@@ -53,10 +54,8 @@ package
 			var i:int;
 			var a:int;
 			var b:int;
-			FlxG.log("Level =" + FlxG.level);
 			
 			asteroidsG = new FlxGroup(FlxG.level + 2);
-			FlxG.log("Tamanho do grupo de asteroids G: " + asteroidsG.maxSize);
 			for (i = 0; i < asteroidsG.maxSize; i++) {
 				a = FlxG.random() * (FlxG.width / 13);
 				b = FlxG.random() * (FlxG.height / 13);
@@ -85,7 +84,6 @@ package
 			}
 			
 			asteroidsM = new FlxGroup(asteroidsG.maxSize * 2);
-			FlxG.log("Tamanho do grupo de asteroids M: " + asteroidsM.maxSize);
 			for (i = 0; i < asteroidsM.maxSize; i++) {
 				a = FlxG.random() * (FlxG.width / 13);
 				b = FlxG.random() * (FlxG.height / 13);
@@ -94,7 +92,6 @@ package
 			}
 			
 			asteroidsP = new FlxGroup(asteroidsM.maxSize * 2);
-			FlxG.log("Tamanho do grupo de asteroids P: " + asteroidsP.maxSize);
 			for (i = 0; i < asteroidsP.maxSize; i++) {
 				a = FlxG.random() * (FlxG.width / 13);
 				b = FlxG.random() * (FlxG.height / 13);
@@ -140,8 +137,6 @@ package
 			add(textLevel);
 			add(textAstVivos);
 			add(textMaxLevel);
-			
-			FlxG.log("Adicionou player");
 		}
 		
 		override public function update():void {
@@ -163,27 +158,35 @@ package
 				asteroidsVivos--;
 				FlxG.play(explosionMP3, 1, false, true);
 			}
-			if (FlxG.overlap(asteroidsG, vsAsteroidsG, asteroidHitVsAsteroid)) {
-				player1.reset(FlxG.width / 2, FlxG.height / 2);
-				player1.health--;
-				player1.flicker(1);
-				asteroidsVivos--;
-				FlxG.play(explosionMP3, 1, false, true);
+			countTemp -= FlxG.elapsed;
+			
+			if (countTemp <= 0) {
+				if (FlxG.overlap(asteroidsG, vsAsteroidsG, asteroidHitVsAsteroid)) {
+					player1.reset(FlxG.width / 2, FlxG.height / 2);
+					player1.health--;
+					player1.flicker(3);
+					asteroidsVivos--;
+					FlxG.play(explosionMP3, 1, false, true);
+					countTemp = 180;
+				}
+				if (FlxG.overlap(asteroidsM, vsAsteroidsM, asteroidHitVsAsteroid)) {
+					player1.reset(FlxG.width / 2, FlxG.height / 2);
+					player1.health--;
+					player1.flicker(3);
+					asteroidsVivos--;
+					FlxG.play(explosionMP3, 1, false, true);
+					countTemp = 180;
+				}
+				if (FlxG.overlap(asteroidsP, vsAsteroidsP, asteroidHitVsAsteroid)) {
+					player1.reset(FlxG.width / 2, FlxG.height / 2);
+					player1.health--;
+					player1.flicker(3);
+					asteroidsVivos--;
+					FlxG.play(explosionMP3, 1, false, true);
+					countTemp = 180;
+				}
 			}
-			if (FlxG.overlap(asteroidsM, vsAsteroidsM, asteroidHitVsAsteroid)) {
-				player1.reset(FlxG.width / 2, FlxG.height / 2);
-				player1.health--;
-				player1.flicker(1);
-				asteroidsVivos--;
-				FlxG.play(explosionMP3, 1, false, true);
-			}
-			if (FlxG.overlap(asteroidsP, vsAsteroidsP, asteroidHitVsAsteroid)) {
-				player1.reset(FlxG.width / 2, FlxG.height / 2);
-				player1.health--;
-				player1.flicker(1);
-				asteroidsVivos--;
-				FlxG.play(explosionMP3, 1, false, true);
-			}
+			FlxG.log("Tempo = " + countTemp);
 			if (player1.health <= 0) {
 				player1.health = 0;
 				FlxG.music.fadeOut(2, true);
@@ -197,7 +200,6 @@ package
 					FlxG.scores[0] = FlxG.score;
 				}
 				auxAstVivos = 0;
-				FlxG.log("Level =" + FlxG.level);
 				FlxG.music.fadeOut(1, true);
 				FlxG.fade(0xff000000, 1, newGameLevel);
 			}
@@ -218,14 +220,11 @@ package
 			var v: int;
 			var a: Asteroid = e2 as Asteroid;
 			if (a != null) {
-				FlxG.log("player hit vsPlayer");
 				explosion.boom(a.x, a.y);
 				if (a.tipo == 1) {
-					FlxG.log("Asteroid morto tipo G");
 					for (i = 0; i < 2; i++){
 						var f :Asteroid = asteroidsM.getFirstAvailable() as Asteroid;
 						if (f != null) {
-							FlxG.log("Tem asteroid M pra pegar -> I = " + (i + 1));
 							asteroidsVivos ++;
 							f.reset(a.x, a.y);
 							
@@ -253,11 +252,9 @@ package
 						}
 					}
 				}else if (a.tipo == 2) {
-					FlxG.log("Asteroid morto tipo M");
 					for (i = 0; i < 2; i++){
 						var p :Asteroid = asteroidsP.getFirstAvailable() as Asteroid;
 						if (p != null) {
-							FlxG.log("Tem asteroid M pra pegar -> I = " + (i + 1));
 							asteroidsVivos ++;
 							p.reset(a.x, a.y);
 							
@@ -296,14 +293,11 @@ package
 			var v:int;
 			var a: Asteroid = e1 as Asteroid;
 			if (a != null) {
-				FlxG.log("Asteroid hit vsAsteroid");
 				explosion.boom(a.x, a.y);
 				if (a.tipo == 1) {
-					FlxG.log("Asteroid morto tipo G");
 					for (i = 0; i < 2; i++){
 						var f :Asteroid = asteroidsM.getFirstAvailable() as Asteroid;
 						if (f != null) {
-							FlxG.log("Tem asteroid M pra pegar -> I = " + (i + 1));
 							asteroidsVivos ++;
 							f.reset(a.x, a.y);
 							
@@ -331,11 +325,9 @@ package
 						}
 					}
 				}else if (a.tipo == 2) {
-					FlxG.log("Asteroid morto tipo M");
 					for (i = 0; i < 2; i++){
 						var p :Asteroid = asteroidsP.getFirstAvailable() as Asteroid;
 						if (p != null) {
-							FlxG.log("Tem asteroid M pra pegar -> I = " + (i + 1));
 							asteroidsVivos ++;
 							p.reset(a.x, a.y);
 							
