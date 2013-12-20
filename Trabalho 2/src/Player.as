@@ -28,7 +28,7 @@ package
 		override public function update():void {
 			if(FlxG.scores[40] == 1){
 				velocity.x = 0;
-				if (FlxG.keys.justPressed("SPACE") || FlxG.keys.pressed("UP") && isTouching(FLOOR)) {
+				if ((FlxG.keys.justPressed("SPACE") || FlxG.keys.pressed("UP")) && isTouching(FLOOR)) {
 					velocity.y = -300;
 				}
 				
